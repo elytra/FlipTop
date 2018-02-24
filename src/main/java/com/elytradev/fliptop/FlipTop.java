@@ -5,6 +5,7 @@ import com.elytradev.fliptop.block.ModBlocks;
 import com.elytradev.fliptop.item.ModItems;
 import com.elytradev.fliptop.proxy.CommonProxy;
 import com.elytradev.fliptop.util.FlipTopRecipes;
+import com.elytradev.fliptop.util.LootHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -57,7 +58,7 @@ public class FlipTop {
         FlipTopLog.info("Don't flip out! " + name + " is loading!");
         MinecraftForge.EVENT_BUS.register(FlipTopRecipes.class);
         config = FlipTopConfig.createConfig(event);
-        LootTableList.register(new ResourceLocation("fliptop", "inject/iron_golem"));
+        MinecraftForge.EVENT_BUS.register(new LootHandler());
 
         proxy.preInit();
     }
@@ -93,18 +94,6 @@ public class FlipTop {
             ModBlocks.register(event.getRegistry());
         }
 
-        @SubscribeEvent
-        public void lootLoad(LootTableLoadEvent evt) {
-            if (evt.getName().equals(LootTableList.ENTITIES_IRON_GOLEM)) {
-                // do stuff with evt.getTable()
-                LootEntry entry = new LootEntryTable(new ResourceLocation("fliptop","inject/iron_golem"), 1, 0, new LootCondition[0], "golem_entry"); // weight doesn't matter since it's the only entry in the pool. Other params set as you wish.
-
-                LootPool pool = new LootPool(new LootEntry[] {entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "golem_pool"); // Other params set as you wish.
-
-                evt.getTable().addPool(pool);
-
-            }
-        }
     }
 
 
