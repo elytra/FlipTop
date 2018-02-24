@@ -8,10 +8,17 @@ import com.elytradev.fliptop.util.FlipTopRecipes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -86,5 +93,19 @@ public class FlipTop {
         public static void registerBlocks(RegistryEvent.Register<Block> event) {
             ModBlocks.register(event.getRegistry());
         }
+
+        @SubscribeEvent
+        public void lootLoad(LootTableLoadEvent evt) {
+            if (evt.getName().toString().equals("minecraft:entities/iron_golem")) {
+                // do stuff with evt.getTable()
+                LootEntry entry = new LootEntryTable(new ResourceLocation("fliptop:inject/iron_golem"), 1, 1, new LootCondition[0], "golem_entry"); // weight doesn't matter since it's the only entry in the pool. Other params set as you wish.
+
+                LootPool pool = new LootPool(new LootEntry[] {entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "golem_pool"); // Other params set as you wish.
+
+                evt.getTable().addPool(pool);
+            }
+        }
     }
+
+
 }

@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -17,6 +18,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemGauntlet extends ItemBase {
 
@@ -33,17 +36,30 @@ public class ItemGauntlet extends ItemBase {
         attackDamage = 3.0F + material.getDamageVsEntity();
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack)
     {
         return isThrowReady;
     }
 
+    @Override
+    public boolean isEnchantable(ItemStack stack)
+    {
+        return false;
+    }
+
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        if (isThrowReady && attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem()==ModItems.IRON_GAUNTLET) {
-            target.addVelocity(0, 1, 0);
-            stack.damageItem(10, attacker);
-            attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).damageItem(10, attacker);
-            isThrowReady = false;
+        if(isThrowReady) {
+            if (attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem() == ModItems.IRON_GAUNTLET) {
+                target.addVelocity(0, 1, 0);
+                stack.damageItem(10, attacker);
+                attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).damageItem(10, attacker);
+                isThrowReady = false;
+                attacker.playSound(SoundEvents.ENTITY_IRONGOLEM_ATTACK, 1, 1);
+            } else {
+                isThrowReady = false;
+            }
         } else {
             stack.damageItem(1, attacker);
         }
@@ -70,27 +86,29 @@ public class ItemGauntlet extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if(!worldIn.isRemote && !isThrowReady) {
+        if(!worldIn.isRemote && !isThrowReady && handIn == EnumHand.MAIN_HAND) {
             if (playerIn.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem() == ModItems.IRON_GAUNTLET && playerIn.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.IRON_GAUNTLET) {
+                playerIn.setActiveHand(handIn);
                 return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);
-            } else {
-                playerIn.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletChargeFail"));
             }
+        }
+        if(handIn == EnumHand.OFF_HAND) {
+            return ActionResult.newResult(EnumActionResult.PASS, itemstack);
         }
         return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
     }
 
     public int getMaxItemUseDuration(ItemStack stack)
     {
-        return 100;
+        return 1200;
     }
 
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-            if (this.getMaxItemUseDuration(stack) - timeLeft <= 0) {
+            if (this.getMaxItemUseDuration(stack) - timeLeft >= 60) {
                 isThrowReady = true;
-                entityLiving.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletCharged"));
+                entityLiving.playSound(SoundEvents.ENTITY_IRONGOLEM_HURT, 1, 1);
             }
         }
     }

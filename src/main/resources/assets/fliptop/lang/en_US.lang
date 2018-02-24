@@ -4,10 +4,10 @@ item.compressed_iron_gauntlet.name=Compressed Iron Gauntlet
 item.press_plate.name=Press Plate
 
 #tooltips
-tooltip.fliptop.iron_gauntlet.0=Wear two for a special surprise!
+tooltip.fliptop.iron_gauntlet.0=Charge up to launch your enemies into the sky!
+tooltip.fliptop.iron_gauntlet.1=Needs one on each arm to work.
 tooltip.fliptop.compressed_iron_gauntlet.0=Is this really a good idea?
+tooltip.fliptop.compressed_iron_gauntlet.1=Takes twice as long to charge.
 
 #misc
-fliptop.msg.gauntletCharged=Gauntlet charged.
-fliptop.msg.gauntletChargeFail=Gauntle can't be charged, must have one in each hand.
 itemGroup.fliptop=FlipTop
