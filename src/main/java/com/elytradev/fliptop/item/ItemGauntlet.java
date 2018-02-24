@@ -1,5 +1,6 @@
 package com.elytradev.fliptop.item;
 
+import com.elytradev.fliptop.util.FlipTopConfig;
 import com.google.common.collect.Multimap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -106,7 +107,7 @@ public class ItemGauntlet extends ItemBase {
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-            if (this.getMaxItemUseDuration(stack) - timeLeft >= 60) {
+            if (this.getMaxItemUseDuration(stack) - timeLeft >= FlipTopConfig.chargeTime) {
                 isThrowReady = true;
                 entityLiving.playSound(SoundEvents.ENTITY_IRONGOLEM_HURT, 1, 1);
             }

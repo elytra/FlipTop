@@ -1,5 +1,6 @@
 package com.elytradev.fliptop.item;
 
+import com.elytradev.fliptop.util.FlipTopConfig;
 import com.google.common.collect.Multimap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,6 +21,7 @@ public class ItemCompressedGauntlet extends ItemBase {
     private final float attackDamage;
     private final ToolMaterial material;
     private boolean isThrowReady = false;
+    private final float moonshotStrength = (float) FlipTopConfig.compressedMoonshot;
 
     public ItemCompressedGauntlet(String name) {
         super(name);
@@ -27,7 +29,7 @@ public class ItemCompressedGauntlet extends ItemBase {
         setCreativeTab(CreativeTabs.COMBAT);
         setMaxStackSize(1);
         setMaxDamage(material.getMaxUses());
-        attackDamage = 6.0F + material.getDamageVsEntity();
+        attackDamage = ((float)FlipTopConfig.compressedAttack - 3) + material.getDamageVsEntity();
     }
 
     @Override
@@ -46,7 +48,7 @@ public class ItemCompressedGauntlet extends ItemBase {
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
         if (isThrowReady) {
             if (attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem() == ModItems.COMPRESSED_IRON_GAUNTLET) {
-                target.addVelocity(0, 5, 0);
+                target.addVelocity(0, moonshotStrength, 0);
                 stack.damageItem(50, attacker);
                 attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).damageItem(50, attacker);
                 attacker.playSound(SoundEvents.ENTITY_IRONGOLEM_ATTACK, 1, 1);
@@ -68,7 +70,7 @@ public class ItemCompressedGauntlet extends ItemBase {
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
     {
         ItemStack mat = new ItemStack(ModItems.PRESS_PLATE);
-        if (!mat.isEmpty() && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false)) return true;
+        if (!mat.isEmpty() && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false) && FlipTopConfig.canRepairCompressed) return true;
         return super.getIsRepairable(toRepair, repair);
     }
 
@@ -100,7 +102,7 @@ public class ItemCompressedGauntlet extends ItemBase {
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-            if (this.getMaxItemUseDuration(stack) - timeLeft >= 120) {
+            if (this.getMaxItemUseDuration(stack) - timeLeft >= 2*FlipTopConfig.chargeTime) {
                 isThrowReady = true;
                 entityLiving.playSound(SoundEvents.ENTITY_IRONGOLEM_HURT, 1, 1);
             }
