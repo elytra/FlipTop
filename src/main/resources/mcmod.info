@@ -1,17 +1,16 @@
 [
   {
-    "modid": "betterboilers",
-    "name": "Better Boilers",
-    "description": "Multiblock boilers and more!",
+    "modid": "fliptop",
+    "name": "FlipTop",
+    "description": "Launch your enemies into the sky!",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "",
     "updateUrl": "",
     "authorList": [
-      "b0undarybreaker",
-      "Falkreon"
+      "b0undarybreaker"
     ],
-    "credits": "MR_Hazard and the Immersive Engineering team (base boiler block texture)",
+    "credits": "",
     "logoFile": "",
     "screenshots": [],
     "dependencies": []
