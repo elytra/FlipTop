@@ -19,7 +19,7 @@ public class FlipTopConfig extends ConcreteConfig {
     public static boolean trueCompression = false;
 
     @ConfigValue(type = Property.Type.INTEGER, category = "GauntletUsage", comment = "The time needed to charge standard gauntlets. Compressed gauntlets will always take twice this time.")
-    public static double chargeTime = 60;
+    public static int chargeTime = 60;
 
     @ConfigValue(type = Property.Type.DOUBLE, category = "CompressedGauntlet", comment = "The velocity a compressed gauntlet give to its target. Anything above 5.0 might cause hostile mobs to despawn midair.")
     public static double compressedMoonshot = 5.0;
