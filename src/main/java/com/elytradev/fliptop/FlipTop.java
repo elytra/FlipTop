@@ -2,7 +2,6 @@ package com.elytradev.fliptop;
 
 import com.elytradev.fliptop.util.FlipTopConfig;
 import com.elytradev.fliptop.block.ModBlocks;
-import com.elytradev.fliptop.client.FlipTopTab;
 import com.elytradev.fliptop.item.ModItems;
 import com.elytradev.fliptop.proxy.CommonProxy;
 import com.elytradev.fliptop.util.FlipTopRecipes;
