@@ -1,7 +1,8 @@
 {
   "pools": [
     {
-      "rolls": 2,
+      "name": "main",
+      "rolls": 1,
       "entries": [
         {
           "type": "item",
