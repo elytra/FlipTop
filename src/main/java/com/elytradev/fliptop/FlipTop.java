@@ -53,7 +53,6 @@ public class FlipTop {
         MinecraftForge.EVENT_BUS.register(FlipTopRecipes.class);
         config = FlipTopConfig.createConfig(event);
 
-//
         proxy.preInit();
     }
 

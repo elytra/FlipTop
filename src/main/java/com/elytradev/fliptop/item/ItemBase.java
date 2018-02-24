@@ -53,7 +53,7 @@ public class ItemBase extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        C28n.formatList(tooltip, "tooltip.bb." + name);
+        C28n.formatList(tooltip, "tooltip.fliptop." + name);
     }
 
     public void initOreDict() {

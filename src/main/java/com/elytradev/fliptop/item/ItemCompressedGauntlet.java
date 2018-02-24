@@ -7,10 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -18,31 +15,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class ItemGauntlet extends ItemBase {
+public class ItemCompressedGauntlet extends ItemBase {
 
     private final float attackDamage;
-    private final Item.ToolMaterial material;
+    private final ToolMaterial material;
     private boolean isThrowReady = false;
 
-    public ItemGauntlet(String name) {
+    public ItemCompressedGauntlet(String name) {
         super(name);
         material=ToolMaterial.IRON;
         setCreativeTab(CreativeTabs.COMBAT);
         setMaxStackSize(1);
         setMaxDamage(material.getMaxUses());
-        attackDamage = 3.0F + material.getDamageVsEntity();
-    }
-
-    public boolean hasEffect(ItemStack stack)
-    {
-        return isThrowReady;
+        attackDamage = 6.0F + material.getDamageVsEntity();
     }
 
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        if (isThrowReady && attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem()==ModItems.IRON_GAUNTLET) {
-            target.addVelocity(0, 1, 0);
-            stack.damageItem(10, attacker);
-            attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).damageItem(10, attacker);
+        if (isThrowReady && attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem()==ModItems.COMPRESSED_IRON_GAUNTLET) {
+            target.addVelocity(0, 10, 0);
+            stack.damageItem(50, attacker);
+            attacker.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).damageItem(50, attacker);
             isThrowReady = false;
         } else {
             stack.damageItem(1, attacker);
@@ -62,37 +54,18 @@ public class ItemGauntlet extends ItemBase {
         return super.getIsRepairable(toRepair, repair);
     }
 
-    public EnumAction getItemUseAction(ItemStack stack)
-    {
-        return EnumAction.BOW;
-    }
-
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if(!worldIn.isRemote && !isThrowReady) {
-            if (playerIn.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem() == ModItems.IRON_GAUNTLET && playerIn.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.IRON_GAUNTLET) {
-                return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);
-            } else {
-                playerIn.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletChargeFail"));
-            }
-        }
-        return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
-    }
-
-    public int getMaxItemUseDuration(ItemStack stack)
-    {
-        return 100;
-    }
-
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
-        if (entityLiving instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-            if (this.getMaxItemUseDuration(stack) - timeLeft <= 0) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if(!world.isRemote && !isThrowReady) {
+            if (player.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).getItem()==ModItems.COMPRESSED_IRON_GAUNTLET && player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem()==ModItems.COMPRESSED_IRON_GAUNTLET) {
                 isThrowReady = true;
-                entityLiving.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletCharged"));
+                player.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletCharged"));
+                return EnumActionResult.SUCCESS;
+            } else {
+                player.sendMessage(new TextComponentTranslation("fliptop.msg.gauntletChargeFail"));
             }
         }
+        return EnumActionResult.FAIL;
     }
 
     public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)

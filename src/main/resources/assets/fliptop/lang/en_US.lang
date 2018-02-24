@@ -1,9 +1,13 @@
 #items
 item.iron_gauntlet.name=Iron Gauntlet
+item.compressed_iron_gauntlet.name=Compressed Iron Gauntlet
 item.press_plate.name=Press Plate
 
 #tooltips
 tooltip.fliptop.iron_gauntlet.0=Wear two for a special surprise!
+tooltip.fliptop.compressed_iron_gauntlet.0=Is this really a good idea?
 
 #misc
+fliptop.msg.gauntletCharged=Gauntlet charged.
+fliptop.msg.gauntletChargeFail=Gauntle can't be charged, must have one in each hand.
 itemGroup.fliptop=FlipTop
